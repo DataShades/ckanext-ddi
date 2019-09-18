@@ -165,7 +165,9 @@ class NadaHarvester(HarvesterBase):
             )
     
     # Get the DDI formatted resource for the GUID
-    #   i.e. https://microdata.pacificdata.org/index.php/catalog/ddi/
+    #   i.e. https://microdata.pacificdata.org/index.php/catalog/ddi/639
+    #   returns a download containing DDI resource
+    # Put this in harvest_object's 'content' as text
     def fetch_stage(self, harvest_object):
         log.debug('In NadaHarvester fetch_stage')
         self._set_config(harvest_object.job.source.config)
