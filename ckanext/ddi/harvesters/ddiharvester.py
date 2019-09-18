@@ -32,7 +32,8 @@ class NadaHarvester(HarvesterBase):
         'no_data_available': 6,
         'open_data': 7,
     }
-
+    
+    # this is same as CKAN package plus 'tags' and 'extras'
     DEFAULT_ATTRIBUTES = [
         'id',
         'name',
@@ -98,7 +99,21 @@ class NadaHarvester(HarvesterBase):
     def gather_stage(self, harvest_job):
         log.debug('In NadaHarvester gather_stage')
         api_url = None
-
+        
+        # Go to i.e. https://microdata.pacificdata.org/index.php/api/v2/catalog/search/format/json?page=1
+        #   and get the json
+        '''
+        {"rows":[{"id":"639","idno":"SPC_ASM_2018_BAS_v01_M_DEVELOPMENT","title":"Business Survey 2018",
+                  "nation":"American Samoa","authoring_entity":"American Samoa Department of Commerce",
+                  "form_model":"data_na","year_start":"2018","year_end":"2018","repositoryid":"ASM",
+                  "link_da":null,"repo_title":"American Samoa","created":"1566780425","changed":"1566780813",
+                  "total_views":"23","total_downloads":"0"},
+                 {"id":"703","idno":"SPC_ASM_2017_ECS_v01_M_DEVELOPMENT",
+                  "title":"Economic census 2017","nation":"American Samoa","authoring_entity":"US Census ....}]}
+        '''
+        # For each row of data, use its ID as the GUID and save a harvest job
+        # Return a list of all these new harvest jobs
+        # 
         try:
             continue_gather = True
             page = 1
@@ -148,7 +163,9 @@ class NadaHarvester(HarvesterBase):
                 % (api_url, str(e), traceback.format_exc()),
                 harvest_job
             )
-
+    
+    # Get the DDI formatted resource for the GUID
+    #   i.e. https://microdata.pacificdata.org/index.php/catalog/ddi/
     def fetch_stage(self, harvest_object):
         log.debug('In NadaHarvester fetch_stage')
         self._set_config(harvest_object.job.source.config)
