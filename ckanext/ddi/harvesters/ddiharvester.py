@@ -242,6 +242,7 @@ class NadaHarvester(HarvesterBase):
                     'ckanext.ddi.default_license',
                     ''
                 )
+            # Add tags if necessary   
             tags = []
             for tag in pkg_dict['tags']:
                 if isinstance(tag, basestring):
@@ -250,6 +251,7 @@ class NadaHarvester(HarvesterBase):
             pkg_dict['version'] = pkg_dict['version'][:100]
 
             # add resources
+            # basically sources
             resources = [
                 {
                     'url': base_url + self._get_ddi_api(harvest_object.guid),
@@ -265,6 +267,7 @@ class NadaHarvester(HarvesterBase):
             pkg_dict['resources'] = resources
 
             log.debug('package dict: %s' % pkg_dict)
+            # Now create the package
             return self._create_or_update_package(pkg_dict, harvest_object)
         except Exception, e:
             self._save_object_error(
