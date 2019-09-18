@@ -33,7 +33,8 @@ class NadaHarvester(HarvesterBase):
         'open_data': 7,
     }
     
-    # this is same as CKAN package plus 'tags' and 'extras'
+    # CKAN attributes, but we're missing heaps (they'd all just be stored in 'extras')
+    #   could be a big problem point
     DEFAULT_ATTRIBUTES = [
         'id',
         'name',
@@ -218,8 +219,15 @@ class NadaHarvester(HarvesterBase):
 
         try:
             base_url = harvest_object.source.url.rstrip('/')
+            
+            # Get a class which maps ckan metadata to the DDI equivalent
             ckan_metadata = DdiCkanMetadata()
+            # Extract metadata content from XML DDI
+            #   put it in a dictionary
             pkg_dict = ckan_metadata.load(harvest_object.content)
+            
+            # Go through the dictionary and put 'uncrecognised' attributes
+            #   into a field called 'extras' (any field which isn't in DEFAULT ATTRIBUTES)
             pkg_dict = self._convert_to_extras(pkg_dict)
 
             # update URL with NADA catalog link
