@@ -32,22 +32,10 @@ class NadaHarvester(HarvesterBase):
         'no_data_available': 6,
         'open_data': 7,
     }
-
-    DEFAULT_ATTRIBUTES = [
-        'id',
-        'name',
-        'title',
-        'url',
-        'author',
-        'author_email',
-        'maintainer',
-        'maintainer_email',
-        'license_id',
-        'version',
-        'notes',
-        'tags',
-        'extras',
-    ]
+    
+    # Default attributes are in ddi's  metadata file
+    DEFAULT_ATTRIBUTES = list(DdiCkanMetadata().get_mapping().keys())
+    #print(DEFAULT_ATTRIBUTES)
 
     def info(self):
         return {
@@ -258,7 +246,7 @@ class NadaHarvester(HarvesterBase):
         for key in pkg_dict:
             if key not in self.DEFAULT_ATTRIBUTES:
                 log.debug('Converting %s to extra' % key)
-                pkg_dict['extras'].append((key, pkg_dict[key]))
+                pkg_dict['extras'].append({'key': key, 'value': pkg_dict[key]})
                 keys_to_delete.append(key)
         
 
