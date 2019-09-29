@@ -213,7 +213,6 @@ class CkanMetadata(object):
             'author',
             'author_email',
             'publisher_name',
-            'maintainer_email',
             'license_id',
             'copyright',
             'version',
@@ -422,9 +421,6 @@ class DdiCkanMetadata(CkanMetadata):
         'author_email': StringValue(''),
         'publisher_name': XPathTextValue(
             "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:prodStmt/ddi:producer"  # noqa
-        ),
-        'maintainer_email': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:distStmt/ddi:contact/@email"  # noqa
         ),
         'copyright': XPathTextValue(
             '//ddi:codeBook/ddi:stdyInfo/ddi:citation/ddi:prodStmt/ddi:copyright'  # noqa
