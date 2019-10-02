@@ -210,45 +210,11 @@ class CkanMetadata(object):
             'name',
             'title',
             'url',
-            'author',
-            'author_email',
             'publisher_name',
-            'license_id',
-            'copyright',
-            'version',
-            'version_notes',
-            'notes',
-            'tags',
             'abbreviation',
-            'study_type',
-            'series_info',
-            'id_number',
-            'description',
-            'production_type',
-            'issued',
-            'abstract',
-            'kind_of_data',
-            'unit_of_analysis',
-            'description_of_scope',
             'country',
-            'member_countries',
-            'geographic_coverage',
-            'time_period_covered',
-            'universe',
-            'primary_investigator',
-            'other_producers',
-            'funding',
-            'sampling_procedure',
-            'data_collection_dates',
-            'access_authority',
-            'conditions',
-            'citation_requirement',
-            'contact_name',
-            'contact_email',
-            'contact_uri',
-            'language',
-            'temporal_start',
-            'temporal_end'
+            'notes',
+            'member_countries'
         ])
 
     def get_attribute(self, ckan_attribute):
@@ -287,38 +253,11 @@ class DdiCkanMetadata(CkanMetadata):
         'abbreviation': XPathTextValue(
             "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:titlStmt/ddi:altTitl"  # noqa
         ),
-        'study_type': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:serStmt/ddi:serName"  # noqa
-        ),
-        'series_info': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:serStmt/ddi:serInfo"  # noqa
-        ),
-        'id_number': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:titlStmt/ddi:IDNo"  # noqa
-        ),
-        'description': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:abstract"  # noqa
-        ),
-        'issued': XPathTextValue(
-            "//ddi:codeBook/ddi:docDscr//ddi:citation/ddi:prodStmt/ddi:prodDate/@date"  # noqa
-        ),
-        'production_type': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:method/ddi:collMode"  # noqa
-        ),
-        'abstract': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:abstract"  # noqa
-        ),
-        'kind_of_data': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:dataKind"  # noqa
-        ),
-        'unit_of_analysis': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:anlyUnit"  # noqa
-        ),
-        'description_of_scope': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:abstract"  # noqa
-        ),
         'country': XPathTextValue(
             "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:nation"
+        ),
+        'notes': XPathTextValue(
+            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:notes"
         ),
         'member_countries': ArrayTextValue(
             XPathMultiTextValue(
@@ -326,121 +265,12 @@ class DdiCkanMetadata(CkanMetadata):
             ),
             separator=', '
         ),
-        'geographic_coverage': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:geogCover"  # noqa
-        ),
-        'time_period_covered': ArrayTextValue(
-            XPathMultiTextValue(
-                "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:timePrd"  # noqa
-            ),
-            separator=', '
-        ),
-        'universe': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:universe"  # noqa
-        ),
-        'primary_investigator': XPathTextValue(
+        'publisher_name': XPathTextValue(
             "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:rspStmt/ddi:AuthEnty"  # noqa
-        ),
-        'other_producers': FirstInOrderValue([
-            ArrayTextValue(
-                XPathMultiTextValue(
-                    "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:rspStmt/ddi:othId"  # noqa
-                ),
-                separator="<br />\r\n"
-            ),
-            ArrayTextValue(
-                XPathMultiTextValue(
-                    "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:rspStmt/ddi:othId/ddi:p"  # noqa
-                ),
-                separator="<br />\r\n"
-            ),
-        ]),
-        'funding': ArrayTextValue(
-            XPathMultiTextValue(
-                "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:prodStmt/ddi:fundAg"  # noqa
-            ),
-            separator="<br />\r\n"
-        ),
-        'sampling_procedure': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:method/ddi:dataColl/ddi:sampProc"  # noqa
-        ),
-        'data_collection_dates': CombinedValue(
-            [
-                DateCollectionValue(
-                    [
-                        XPathMultiTextValue(
-                            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:collDate[@event='start']/@date",  # noqa
-                        ),
-                        XPathMultiTextValue(
-                            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:collDate[@event='end']/@date",  # noqa
-                        ),
-                        XPathMultiTextValue(
-                            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:collDate[@event='end']/@cycle",  # noqa
-                        ),
-                    ],
-                    separator="<br />\r\n"
-                ),
-                ArrayTextValue(
-                    XPathMultiTextValue(
-                            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:collDate[@event='single' or not(@event)]/@date",  # noqa
-                    ),
-                    separator="<br />\r\n"
-                ),
-            ],
-            separator="<br />\r\n"
-        ),
-        'access_authority': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:dataAccs/ddi:useStmt/ddi:contact"  # noqa
-        ),
-        'conditions': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:dataAccs/ddi:useStmt/ddi:conditions"  # noqa
-        ),
-        'citation_requirement': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:dataAccs/ddi:useStmt/ddi:citReq"  # noqa
-        ),
-        'contact_name': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:distStmt/ddi:contact"  # noqa
-        ),
-        'contact_email': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:distStmt/ddi:contact/@email"  # noqa
-        ),
-        'contact_uri': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:distStmt/ddi:contact/@uri"
         ),
         'url': XPathTextValue(
             "//ddi:codeBook/ddi:stdyDscr/ddi:dataAccs/ddi:setAvail/ddi:accsPlac/@URI"  # noqa
-        ),
-        'author': CombinedValue(
-            [
-                XPathTextValue('//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:rspStmt/ddi:AuthEnty'),  # noqa
-                XPathTextValue('//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:contributor'),  # noqa
-            ],
-            separator="<br />\r\n"
-        ),
-        # TODO: Do we need that? What DDI field should be used?
-        'author_email': StringValue(''),
-        'publisher_name': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:prodStmt/ddi:producer"  # noqa
-        ),
-        'copyright': XPathTextValue(
-            '//ddi:codeBook/ddi:stdyInfo/ddi:citation/ddi:prodStmt/ddi:copyright'  # noqa
-        ),
-        'license_id': XPathTextValue(
-            '//ddi:codeBook/ddi:stdyInfo/ddi:citation/ddi:prodStmt/ddi:copyright'  # noqa
-        ),
-        'version': XPathTextValue('//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:verStmt/ddi:version'),  # noqa
-        'version_notes': XPathTextValue('//ddi:codeBook/ddi:stdyDscr/ddi:citation/ddi:verStmt/ddi:notes'),  # noqa
-        'notes': XPathTextValue(
-            "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:notes"  # noqa
-        ),
-        'tags': ArrayDictNameValue([
-            XPathMultiValue(
-                "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:subject/ddi:keyword"  # noqa
-            )
-        ]),
-        'language': XPathTextValue('//ddi:codeBook/@xml-lang'),
-        'temporal_start': XPathTextValue("//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:collDate[@event='start']/@date"),
-        'temporal_end': XPathTextValue("//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:collDate[@event='end']/@date")
+        )
     }
 
     def get_mapping(self):
