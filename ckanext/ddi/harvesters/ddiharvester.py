@@ -9,7 +9,7 @@ from ckanext.harvest.model import HarvestObject
 from ckanext.harvest.harvesters import HarvesterBase
 from ckanext.ddi.importer import DdiCkanMetadata
 
-from pylons import config
+from ckantoolkit import config
 
 import logging
 log = logging.getLogger(__name__)
@@ -158,7 +158,7 @@ class NadaHarvester(HarvesterBase):
             log.debug('IDs: %r' % harvest_obj_ids)
 
             return harvest_obj_ids
-        except Exception, e:
+        except Exception as e:
             self._save_gather_error(
                 'Unable to get content for URL: %s: %s / %s'
                 % (api_url, str(e), traceback.format_exc()),
@@ -195,7 +195,7 @@ class NadaHarvester(HarvesterBase):
             harvest_object.save()
             log.debug('successfully processed ' + harvest_object.guid)
             return True
-        except Exception, e:
+        except Exception as e:
             self._save_object_error(
                 (
                     'Unable to get content for package: %s: %r / %s'
@@ -269,7 +269,7 @@ class NadaHarvester(HarvesterBase):
             log.debug('package dict: %s' % pkg_dict)
             # Now create the package
             return self._create_or_update_package(pkg_dict, harvest_object)
-        except Exception, e:
+        except Exception as e:
             self._save_object_error(
                 (
                     'Exception in import stage: %r / %s'

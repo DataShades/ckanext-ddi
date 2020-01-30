@@ -257,7 +257,7 @@ class CkanMetadata(object):
     def load(self, xml_string):
         try:
             dataset_xml = etree.fromstring(xml_string)
-        except etree.XMLSyntaxError, e:
+        except etree.XMLSyntaxError as e:
             raise MetadataFormatError('Could not parse XML: %r' % e)
 
         ckan_metadata = {}
