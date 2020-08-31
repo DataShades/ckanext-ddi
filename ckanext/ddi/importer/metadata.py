@@ -80,7 +80,7 @@ class XPathTextValue(XPathValue):
                 value.text is not None and
                 value.text.strip() != ''):
             return value.text.strip()
-        elif isinstance(value, basestring):
+        elif isinstance(value, str):
             return value
         else:
             return ''
@@ -96,7 +96,7 @@ class XPathMultiTextValue(XPathMultiValue):
                     value.text is not None and
                     value.text.strip() != ''):
                 return_values.append(value.text.strip())
-            elif isinstance(value, basestring):
+            elif isinstance(value, str):
                 return_values.append(value)
         return return_values
 
@@ -255,8 +255,10 @@ class CkanMetadata(object):
         raise NotImplementedError
 
     def load(self, xml_string):
+        _xml = xml_string.encode('utf-8')
+        parser = etree.XMLParser(ns_clean=True, recover=True, encoding='utf-8')
         try:
-            dataset_xml = etree.fromstring(xml_string)
+            dataset_xml = etree.fromstring(_xml, parser=parser)
         except etree.XMLSyntaxError as e:
             raise MetadataFormatError('Could not parse XML: %r' % e)
 
