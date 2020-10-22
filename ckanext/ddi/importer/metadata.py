@@ -80,7 +80,7 @@ class XPathTextValue(XPathValue):
                 value.text is not None and
                 value.text.strip() != ''):
             return value.text.strip()
-        elif isinstance(value, basestring):
+        elif isinstance(value, (str, bytes)):
             return value
         else:
             return ''
@@ -96,7 +96,7 @@ class XPathMultiTextValue(XPathMultiValue):
                     value.text is not None and
                     value.text.strip() != ''):
                 return_values.append(value.text.strip())
-            elif isinstance(value, basestring):
+            elif isinstance(value, (str, bytes)):
                 return_values.append(value)
         return return_values
 
@@ -232,6 +232,7 @@ class CkanMetadata(object):
             'unit_of_analysis',
             'description_of_scope',
             'country',
+            'member_countries',
             'geographic_coverage',
             'time_period_covered',
             'universe',
@@ -256,7 +257,7 @@ class CkanMetadata(object):
 
     def load(self, xml_string):
         try:
-            dataset_xml = etree.fromstring(xml_string)
+            dataset_xml = etree.fromstring(bytes(xml_string, encoding='utf-8'))
         except etree.XMLSyntaxError as e:
             raise MetadataFormatError('Could not parse XML: %r' % e)
 
@@ -316,6 +317,12 @@ class DdiCkanMetadata(CkanMetadata):
         'country': ArrayTextValue(
             XPathMultiTextValue(
                 "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:nation"  # noqa
+            ),
+            separator=', '
+        ),
+        'member_countries': ArrayTextValue(
+            XPathMultiTextValue(
+                "//ddi:codeBook/ddi:stdyDscr/ddi:stdyInfo/ddi:sumDscr/ddi:nation/@abbr"  # noqa
             ),
             separator=', '
         ),
